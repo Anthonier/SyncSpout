@@ -64,3 +64,5 @@ SyncSpout是上海华瑞银行（SHRB）大数据团队开发的，用来构造�
 E-MAIL：365781062@qq.com
 
 公司E-MAIL：wushaojie@shrbank.com
+
+GitHub：https://github.com/shrbank/SyncSpout
