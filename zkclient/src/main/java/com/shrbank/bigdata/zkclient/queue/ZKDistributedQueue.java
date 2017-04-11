@@ -15,14 +15,13 @@
  */
 package com.shrbank.bigdata.zkclient.queue;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.shrbank.bigdata.zkclient.ZKClient;
 import com.shrbank.bigdata.zkclient.exception.ZKNoNodeException;
+import com.shrbank.bigdata.zkclient.util.ExceptionUtil;
 import org.apache.zookeeper.CreateMode;
 
-import com.shrbank.bigdata.zkclient.util.ExceptionUtil;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * 分布式队列

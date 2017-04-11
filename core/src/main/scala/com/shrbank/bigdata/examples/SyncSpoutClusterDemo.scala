@@ -1,8 +1,8 @@
 package com.shrbank.bigdata.examples
 
 import com.shrbank.bigdata.storm.{SendBolt, SyncSpout}
-import org.apache.storm.{Config, StormSubmitter}
 import org.apache.storm.topology.TopologyBuilder
+import org.apache.storm.{Config, StormSubmitter}
 
 
 /**

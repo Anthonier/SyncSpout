@@ -15,19 +15,18 @@
  */
 package com.shrbank.bigdata.zkclient.lock;
 
-import java.util.List;
-import java.util.concurrent.Semaphore;
-
 import com.shrbank.bigdata.zkclient.ZKClient;
 import com.shrbank.bigdata.zkclient.exception.ZKInterruptedException;
 import com.shrbank.bigdata.zkclient.exception.ZKNoNodeException;
 import com.shrbank.bigdata.zkclient.listener.ZKChildCountListener;
+import com.shrbank.bigdata.zkclient.listener.ZKStateListener;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.shrbank.bigdata.zkclient.listener.ZKStateListener;
+import java.util.List;
+import java.util.concurrent.Semaphore;
 
 /**
  * 主从服务锁，主服务一直持有锁，断开连接，从服务获得锁

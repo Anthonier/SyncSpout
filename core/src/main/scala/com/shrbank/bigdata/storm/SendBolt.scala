@@ -22,13 +22,25 @@ object SendBolt {
     * SendBolt消息的字段名
     */
   val OutputFieldName = "SendBoltMessage-0f284c46-bf8c-4eed-9111-b87e8ae5196f"
+  /**
+    * ActorSystem变量
+    */
+  @transient
+  private var system:ActorSystem = _
+
+  /**
+    * 获取ActorSystem单例对象
+    * @return ActorSystem单例对象
+    */
+  private[SendBolt] def getActorSystemInstance:ActorSystem = {
+    if( system == null ){
+      system = ActorSystem.create(SendBolt.systemName,SyncSpout.config)
+    }
+    system
+  }
 }
 class SendBolt extends BaseBasicBolt{
   private val log = LoggerFactory.getLogger(this.getClass)
-  /**
-    * SendBolt是否初始化
-    */
-  private var isPrepare = false
   /**
     * SendBolt对应的ActorSystem占用的端口号
     */
@@ -44,7 +56,7 @@ class SendBolt extends BaseBasicBolt{
   /**
     * SyncSpout在zk中的配置
     */
-  private var zkConfig:NewSyncSpoutZkConfig = _
+  private var zkConfig:SyncSpoutZkConfig = _
 
   /**
     * SendBolt退出时清理资源
@@ -52,7 +64,6 @@ class SendBolt extends BaseBasicBolt{
   override def cleanup(): Unit = {
     system.shutdown()
     zkConfig.unRegisterClientPort(this.sendBoltHost,this.sendBoltPort)
-    isPrepare = false
   }
 
   /**
@@ -61,25 +72,22 @@ class SendBolt extends BaseBasicBolt{
     * @param context 当前的TopologyContext
     */
   override def prepare(stormConf: util.Map[_, _], context: TopologyContext): Unit = {
-    if(!this.isPrepare){
-      val topologyName = stormConf.get("topology.name").toString
-      log.info(s"SendBolt[$topologyName] 开始初始化")
+    val topologyName = stormConf.get("topology.name").toString
+    log.info(s"SendBolt[$topologyName] 开始初始化")
 
-      this.zkConfig = new NewSyncSpoutZkConfig(SyncSpout.config.getString("server.zkServer"),topologyName)
+    this.zkConfig = new SyncSpoutZkConfig(SyncSpout.config.getString("server.zkServer"),topologyName)
 
-      log.debug(s"SendBolt[$topologyName] config ${SyncSpout.config}")
+    log.debug(s"SendBolt[$topologyName] config ${SyncSpout.config}")
 
-      system =  ActorSystem.create(SendBolt.systemName,SyncSpout.config)
-      // 当前system的网路地址信息
-      val defaultAddress = system.asInstanceOf[ExtendedActorSystem].provider.getDefaultAddress
-      // 获取当前system实际的端口号、IP地址
-      sendBoltPort = defaultAddress.port.getOrElse(-1)
-      sendBoltHost = defaultAddress.host.getOrElse("")
-      zkConfig.registerClientPort(sendBoltHost,sendBoltPort)
-      log.info(s"SendBolt[$topologyName] 占用端口 $sendBoltHost:$sendBoltPort")
-      this.isPrepare = true
-    }
-
+    // 用单例对象替代create代码
+    system = SendBolt.getActorSystemInstance
+    // 当前system的网路地址信息
+    val defaultAddress = system.asInstanceOf[ExtendedActorSystem].provider.getDefaultAddress
+    // 获取当前system实际的端口号、IP地址
+    sendBoltPort = defaultAddress.port.getOrElse(-1)
+    sendBoltHost = defaultAddress.host.getOrElse("")
+    zkConfig.registerClientPort(sendBoltHost,sendBoltPort)
+    log.info(s"SendBolt[$topologyName] 占用端口 $sendBoltHost:$sendBoltPort system=${system.hashCode()}")
   }
 
   /**
@@ -92,14 +100,12 @@ class SendBolt extends BaseBasicBolt{
     val client = tuple.getValueByField(SyncSpoutClient.TupleFieldName).asInstanceOf[ActorPath]
     val msg = tuple.getValueByField(SendBolt.OutputFieldName)
     val msgSendTime = tuple.getValueByField(SyncSpout.MsgSendTimeFieldName).asInstanceOf[String]
-    if( (System.currentTimeMillis - msgSendTime.toLong) > SyncSpout.MessageTimeThreshold )
-      log.warn(s"返回该消息$msg, 耗时 ${System.currentTimeMillis - msgSendTime.toLong} 毫秒")
 
-    // system.actorSelection(server) !  SpoutOutputMsg(client, msg)
     // 直接返回消息给client，以减少SyncSpout的压力
     system.actorSelection(client) !  msg
-
     basicOutputCollector.emit(SyncBoltValues(tuple,msg))
+    if( (System.currentTimeMillis - msgSendTime.toLong) > SyncSpout.MessageTimeThreshold )
+      log.warn(s"返回该消息$msg, 耗时 ${System.currentTimeMillis - msgSendTime.toLong} 毫秒")
   }
 
   /**

@@ -15,12 +15,6 @@
  */
 package com.shrbank.bigdata.zkclient.lock;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-
 import com.shrbank.bigdata.zkclient.ZKClient;
 import com.shrbank.bigdata.zkclient.exception.ZKInterruptedException;
 import com.shrbank.bigdata.zkclient.exception.ZKNoNodeException;
@@ -28,6 +22,12 @@ import com.shrbank.bigdata.zkclient.listener.ZKChildCountListener;
 import org.apache.zookeeper.CreateMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 分布式锁

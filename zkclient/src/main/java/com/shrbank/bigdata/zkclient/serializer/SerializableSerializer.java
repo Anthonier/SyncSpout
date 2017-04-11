@@ -15,15 +15,11 @@
  */
 package com.shrbank.bigdata.zkclient.serializer;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-
 import org.apache.zookeeper.server.util.SerializeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.*;
 
 /**
  * 序列化反序列化工具类

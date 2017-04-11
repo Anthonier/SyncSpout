@@ -4,17 +4,17 @@
 
   <groupId>com.shrbank.bigdata</groupId>
   <artifactId>syncSpout</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>${compile.version}</version>
   <modules>
     <module>core</module>
     <module>zkclient</module>
-    <module>messageQueue</module>
   </modules>
   <packaging>pom</packaging>
 
   <name>syncSpout</name>
 
   <properties>
+    <compile.version>1.2-SNAPSHOT</compile.version>
     <!-- jdk版本 -->
     <java.version>1.8</java.version>
     <scala.version>2.10.6</scala.version>

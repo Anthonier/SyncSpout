@@ -1,8 +1,8 @@
 package com.shrbank.bigdata.examples
 
 import com.shrbank.bigdata.storm.{SendBolt, SyncBoltFields, SyncBoltValues}
-import org.apache.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
 import org.apache.storm.topology.base.BaseBasicBolt
+import org.apache.storm.topology.{BasicOutputCollector, OutputFieldsDeclarer}
 import org.apache.storm.tuple.Tuple
 import org.slf4j.LoggerFactory
 

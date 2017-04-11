@@ -15,6 +15,13 @@
  */
 package com.shrbank.bigdata.zkclient.leader;
 
+import com.shrbank.bigdata.zkclient.ZKClient;
+import com.shrbank.bigdata.zkclient.exception.ZKException;
+import com.shrbank.bigdata.zkclient.listener.ZKStateListener;
+import com.shrbank.bigdata.zkclient.lock.ZKDistributedDelayLock;
+import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.Watcher.Event.KeeperState;
+
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -23,14 +30,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
-
-import com.shrbank.bigdata.zkclient.ZKClient;
-import com.shrbank.bigdata.zkclient.lock.ZKDistributedDelayLock;
-import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.Watcher.Event.KeeperState;
-
-import com.shrbank.bigdata.zkclient.exception.ZKException;
-import com.shrbank.bigdata.zkclient.listener.ZKStateListener;
 
 /**
  * 选举Leader

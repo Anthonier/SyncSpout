@@ -15,9 +15,6 @@
  */
 package com.shrbank.bigdata.zkclient.connection;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
 import com.shrbank.bigdata.zkclient.event.ZKEventLock;
 import com.shrbank.bigdata.zkclient.exception.ZKException;
 import com.shrbank.bigdata.zkclient.exception.ZKInterruptedException;
@@ -25,6 +22,9 @@ import com.shrbank.bigdata.zkclient.exception.ZKTimeoutException;
 import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
+
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ZK客户端连接接口，定义了ZKConnection所需实现的方法

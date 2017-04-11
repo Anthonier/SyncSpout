@@ -15,16 +15,6 @@
  */
 package com.shrbank.bigdata.zkclient.connection;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
-import javax.security.auth.login.Configuration;
-
 import com.shrbank.bigdata.zkclient.event.ZKEventLock;
 import com.shrbank.bigdata.zkclient.exception.ZKException;
 import com.shrbank.bigdata.zkclient.exception.ZKInterruptedException;
@@ -38,6 +28,15 @@ import org.apache.zookeeper.Watcher.Event.KeeperState;
 import org.apache.zookeeper.ZooKeeper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.security.auth.login.Configuration;
+import java.io.File;
+import java.io.IOException;
+import java.util.Date;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 负责连接、关闭与服务器的连接，实现了断线重连，会话过期重连等机制

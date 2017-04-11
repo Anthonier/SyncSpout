@@ -18,7 +18,7 @@ object SyncSpoutLocalDemo {
     // SendBolt用于返回消息
     builder.setBolt("sendBolt",new SendBolt(),2).shuffleGrouping("simpleBolt")
     val cluster = new LocalCluster()
-    val topName = "SyncSpoutTop" //SyncSpoutTop,recommend_system_purchase
+    val topName = "SyncSpoutTop"
     val conf = new Config()
     conf.setNumWorkers(2)
     cluster.submitTopology(topName,conf,builder.createTopology())

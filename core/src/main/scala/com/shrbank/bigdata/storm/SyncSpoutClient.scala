@@ -5,6 +5,7 @@ import akka.pattern.{AskableActorSelection, Patterns}
 import akka.util.Timeout
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
+
 import scala.concurrent._
 import scala.concurrent.duration._
 
@@ -42,12 +43,12 @@ class SyncSpoutClient{
   private def getServerRefArray = this.serverRefs.toArray
   // 当前使用的server索引，每次ask后，简单的+1
   private var currentServerIndex = -1
-  private var zkConfig:NewSyncSpoutZkConfig = _
+  private var zkConfig:SyncSpoutZkConfig = _
  
   def this(topologyName:String) {
     this()
     this.topologyName = topologyName
-    zkConfig = new NewSyncSpoutZkConfig(SyncSpoutClient.config.getString("client.zkServer"),topologyName)
+    zkConfig = new SyncSpoutZkConfig(SyncSpoutClient.config.getString("client.zkServer"),topologyName)
     start()
     zkConfig.watchServer(start)
   }

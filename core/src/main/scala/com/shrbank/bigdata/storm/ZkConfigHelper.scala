@@ -17,15 +17,15 @@ object ZkConfigHelper {
     val Array( zkServer,cmd,topologyName ) = args
     log.info(s"查找[$zkServer]下[$topologyName]的配置情况")
     println(s"查找[$zkServer]下[$topologyName]的配置情况")
-    var zkConfig:NewSyncSpoutZkConfig = null
+    var zkConfig:SyncSpoutZkConfig = null
     if(topologyName.toLowerCase=="all"){
       //zkConfig = new SyncSpoutZkConfig(zkServer)
-      zkConfig = new NewSyncSpoutZkConfig(zkServer)
-      val children = zkConfig.getZkClient.getChildren(NewSyncSpoutZkConfig.ZK_ROOT_PATH)
+      zkConfig = new SyncSpoutZkConfig(zkServer)
+      val children = zkConfig.getZkClient.getChildren(SyncSpoutZkConfig.ZK_ROOT_PATH)
       println(s"$cmd 运行中的Spout列表")
       for(i<-0 until children.size()){
         println(s"$i,${children.get(i)}")
-        val childrenPath = s"${NewSyncSpoutZkConfig.ZK_ROOT_PATH}/${children.get(i)}"
+        val childrenPath = s"${SyncSpoutZkConfig.ZK_ROOT_PATH}/${children.get(i)}"
         val server = zkConfig.getZkClient.getChildren(childrenPath)
         if(cmd.toLowerCase=="list"){
           println(s"${children.get(i)} 分布详情")
@@ -46,7 +46,7 @@ object ZkConfigHelper {
         }
       }
     }else{
-      zkConfig = new NewSyncSpoutZkConfig(zkServer,topologyName)
+      zkConfig = new SyncSpoutZkConfig(zkServer,topologyName)
       println(s"$topologyName 分布详情")
       if(cmd.toLowerCase=="list"){
         zkConfig.getServerPort.foreach(println)
