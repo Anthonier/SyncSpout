@@ -58,7 +58,6 @@ SyncSpout是上海华瑞银行（SHRB）大数据团队开发的，用来构造�
 
 ## 引用第三方类库
 * zkclient：https://github.com/yuluows/zkclient.git
-* MPSC队列：参考akka_2.11-2.4.11的AbstractBoundedNodeQueue类
 
 ## 联系方式
 E-MAIL：365781062@qq.com
