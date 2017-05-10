@@ -65,3 +65,4 @@ E-MAIL：365781062@qq.com
 公司E-MAIL：wushaojie@shrbank.com
 
 [![Analytics](http://ec2-35-160-184-183.us-west-2.compute.amazonaws.com:8080/beacon/gabry/syncSpout/readme.md?pixel)](https://github.com/shrbank/SyncSpout)
+![Analytics1](http://ec2-35-160-184-183.us-west-2.compute.amazonaws.com:8080/beacon/gabry/syncSpout/readme.md?pixel)
