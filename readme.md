@@ -65,6 +65,6 @@ E-MAIL：echo MzY1NzgxMDYyQHFxLmNvbQo= | base64 -d
 公司E-MAIL：echo d3VzaGFvamllQHNocmJhbmsuY29tCg== | base64 -d
 
 QQ群二维码
-[QQ群二维码](https://github.com/shrbank/SyncSpout/blob/master/doc/images/qqGroup.png?raw=true)
+![QQ群二维码](https://github.com/shrbank/SyncSpout/blob/master/doc/images/qqGroup.png?raw=true)
 
 [![HomeLink](http://ec2-35-160-184-183.us-west-2.compute.amazonaws.com:8080/beacon/gabry/shrbank/github/syncSpout?pixel)](https://github.com/shrbank/SyncSpout)
