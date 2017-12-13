@@ -1,4 +1,4 @@
-# ![logo](http://10.128.166.44/gabry/SyncSpoutOpen/raw/master/doc/images/%E4%B8%8A%E6%B5%B7%E5%8D%8E%E7%91%9E%E9%93%B6%E8%A1%8C.png)  SyncSpout简介
+# ![logo](doc/images/%E4%B8%8A%E6%B5%B7%E5%8D%8E%E7%91%9E%E9%93%B6%E8%A1%8C.png)  SyncSpout简介
 
 SyncSpout是上海华瑞银行（SHRB）大数据团队开发的，用来构造可交互的、同步的Storm拓扑的组件。我们在做实时推荐系统中，希望将Storm的并发性和分布式计算能力应用到“请求-响应”范式中，
 比如客户的某次购买行为能够以消息的形式发送到storm拓扑中，storm在指定时间返回推荐结果，也就是说storm需要具有可交互性。基于这样的背景，大数据团队开发了SyncSpout组件，
