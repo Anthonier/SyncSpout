@@ -4,7 +4,7 @@ SyncSpout是上海华瑞银行（SHRB）大数据团队开发的，用来构造�
 比如客户的某次购买行为能够以消息的形式发送到storm拓扑中，storm在指定时间返回推荐结果，也就是说storm需要具有可交互性。基于这样的背景，大数据团队开发了SyncSpout组件，
 该组件可以接收客户端异步的消息，经过Storm拓扑异步计算，在指定时间内返回给客户端。
 ## 架构图
-![架构图](http://10.128.166.44/gabry/SyncSpoutOpen/raw/master/doc/images/SyncSpout.jpg)
+![架构图](doc/images/SyncSpout.jpg)
 ## 关键组件介绍
 * SyncSpout：继承storm的IRichSpout，用于接收客户端调用消息并将消息emit出去的Spout
 * SendBolt：拓扑中发送计算结果的bolt，该bolt将计算结果返回给客户端
@@ -67,6 +67,6 @@ QQ群号码：620317570
 
 QQ群二维码
 
-![QQ群二维码](https://github.com/shrbank/SyncSpout/blob/master/doc/images/qqGroup.png?raw=true)
+![QQ群二维码](doc/images/qqGroup.png?raw=true)
 
 [![HomeLink](http://ec2-35-160-184-183.us-west-2.compute.amazonaws.com:8080/beacon/gabry/shrbank/github/syncSpout?pixel)](https://github.com/shrbank/SyncSpout)
