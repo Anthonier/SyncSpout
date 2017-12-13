@@ -1,10 +1,10 @@
-# ![logo](https://github.com/shrbank/SyncSpout/blob/master/doc/images/%E4%B8%8A%E6%B5%B7%E5%8D%8E%E7%91%9E%E9%93%B6%E8%A1%8C.png?raw=true)  SyncSpout简介
+# ![logo](http://10.128.166.44/gabry/SyncSpoutOpen/raw/master/doc/images/%E4%B8%8A%E6%B5%B7%E5%8D%8E%E7%91%9E%E9%93%B6%E8%A1%8C.png)  SyncSpout简介
 
 SyncSpout是上海华瑞银行（SHRB）大数据团队开发的，用来构造可交互的、同步的Storm拓扑的组件。我们在做实时推荐系统中，希望将Storm的并发性和分布式计算能力应用到“请求-响应”范式中，
 比如客户的某次购买行为能够以消息的形式发送到storm拓扑中，storm在指定时间返回推荐结果，也就是说storm需要具有可交互性。基于这样的背景，大数据团队开发了SyncSpout组件，
 该组件可以接收客户端异步的消息，经过Storm拓扑异步计算，在指定时间内返回给客户端。
 ## 架构图
-![架构图](https://github.com/shrbank/SyncSpout/blob/master/doc/images/SyncSpout.jpg?raw=true)
+![架构图](http://10.128.166.44/gabry/SyncSpoutOpen/raw/master/doc/images/SyncSpout.jpg)
 ## 关键组件介绍
 * SyncSpout：继承storm的IRichSpout，用于接收客户端调用消息并将消息emit出去的Spout
 * SendBolt：拓扑中发送计算结果的bolt，该bolt将计算结果返回给客户端
@@ -57,7 +57,6 @@ SyncSpout是上海华瑞银行（SHRB）大数据团队开发的，用来构造�
 * sync-spout-server.conf、sync-spout-client.conf中需要配置zookeeper的host列表
 
 ## 引用第三方类库
-* zkclient：https://github.com/yuluows/zkclient.git
 
 ## 联系方式
 E-MAIL：365781062@qq.com

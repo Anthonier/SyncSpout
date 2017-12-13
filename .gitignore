@@ -3,3 +3,9 @@
 /core/target
 /core/*.iml
 /zkclient/*.iml
+/examples/*.iml
+/examples/logs
+/logs
+/syncSpoutClient/*.iml
+/syncSpoutUtils/*.iml
+*.xml

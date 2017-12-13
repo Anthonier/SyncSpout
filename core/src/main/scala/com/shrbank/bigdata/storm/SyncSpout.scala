@@ -18,33 +18,27 @@ import org.slf4j.LoggerFactory
 private[storm] case class SpoutInputMsg(client:ActorPath, message:AnyRef, messageSendTime:String)
 private[storm] case class SpoutOutputMsg(client:ActorPath, message:AnyRef)
 
-
 object SyncSpout{
-  private [storm] val systemName = "SpoutServerActorSystem"
-  private [storm] val MsgSendTimeFieldName = "MessageTime-9462983c-084c-4966-8f4f-08ec11ca62c6"
-  private [storm] val TupleFieldName = "SyncSpoutServer-113fd1d1-bc17-435c-bed0-28029e014aa0"
-  private[storm] val ActorConfigFile = "sync-spout-actor.conf"
-  private[storm] val ConfigFile = "sync-spout-server.conf"
-
-  lazy private[storm] val config =  ConfigFactory.load(ActorConfigFile).withFallback(ConfigFactory.load(ConfigFile))
+  import collection.convert.wrapAsScala._
+  lazy private[storm] val config =  {
+    val stormConfZkServer:Seq[String] = Utils.StormConfig.get("storm.zookeeper.servers").asInstanceOf[java.util.List[String]]
+    println(s"SyncSpout.stormConfZkServer=${stormConfZkServer.mkString(",")}")
+    ConfigFactory.load(Utils.ActorConfigFile).withFallback(ConfigFactory.load(Utils.ServerConfigFile))
+    .withFallback(ConfigFactory.parseString("server.zkServer=\""+stormConfZkServer.mkString(",")+"\""))
+  }
 
   def apply(): SyncSpout = new SyncSpout()
-  // SyncSpout组件和SendBolt组件获取消息超时时间，单位毫秒
-  private [storm] val MessageTimeThreshold = 1000
-  // 每个消息队列容量的默认值
-  private [storm] val MessageQueueCapacity = 1024
+
   private [SyncSpout] var server:ActorSystem = _
   private [SyncSpout] def getActorSystemInstance:ActorSystem = {
     if( server == null ){
-      server = ActorSystem.create(SyncSpout.systemName,SyncSpout.config)
+      server = ActorSystem.create(Utils.ServerSystemName,SyncSpout.config)
     }
     server
   }
 }
 class SyncSpout extends IRichSpout with IMessageSender{
   private val log = LoggerFactory.getLogger(this.getClass)
-  // 输入消息队列
- // private var msgQueue :Array[ISpoutMessageQueue[SpoutInputMsg]] = _
   // 接收消息的actor
   private var msgActor:ActorRef = _
   // 接收消息的actor路径
@@ -58,7 +52,6 @@ class SyncSpout extends IRichSpout with IMessageSender{
   // 当前actor网络地址
   private var serverHost:String = _
   // zk配置
-  //private var zkConfig:SyncSpoutZkConfig = _
   private var zkConfig:SyncSpoutZkConfig = _
   private var server:ActorSystem = _
   // 该组件初始化时调用，也就是反序列化之后调用。不能序列化的对象都需要在该函数初始化
@@ -95,7 +88,7 @@ class SyncSpout extends IRichSpout with IMessageSender{
   // The one context where close is guaranteed to be called is a topology is killed when running Storm in local mode.
   override def close(): Unit = {
     if( null != msgActor ) this.msgActor ! PoisonPill
-    if( null != server ) this.server.shutdown()
+    if( null != server ) this.server.terminate()
     if (null != zkConfig ){
       zkConfig.unRegisterServerPort(this.serverHost,this.serverPort)
       zkConfig.deleteServerPath()
@@ -130,7 +123,7 @@ class SyncSpout extends IRichSpout with IMessageSender{
   // Declare the output schema for all the streams of this topology.
   // declarer - this is used to declare output stream ids, output fields, and whether or not each output stream is a direct stream
   override def declareOutputFields(outputFieldsDeclarer: OutputFieldsDeclarer): Unit = {
-    outputFieldsDeclarer.declare(SyncBoltFields(SendBolt.OutputFieldName))
+    outputFieldsDeclarer.declare(SyncBoltFields(Utils.SendBoltOutputFieldName))
   }
   // MessageActor用来替代nextTuple发送消息的函数
   override def send(input: SpoutInputMsg): Unit = {

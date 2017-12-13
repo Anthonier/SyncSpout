@@ -1,0 +1,5 @@
+########### These MUST be filled in for a storm configuration
+storm.zookeeper.servers:
+    - "dn4"
+    - "dn3"
+    - "dn1"

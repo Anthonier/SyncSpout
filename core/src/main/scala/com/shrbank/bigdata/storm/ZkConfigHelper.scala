@@ -19,27 +19,26 @@ object ZkConfigHelper {
     println(s"查找[$zkServer]下[$topologyName]的配置情况")
     var zkConfig:SyncSpoutZkConfig = null
     if(topologyName.toLowerCase=="all"){
-      //zkConfig = new SyncSpoutZkConfig(zkServer)
       zkConfig = new SyncSpoutZkConfig(zkServer)
-      val children = zkConfig.getZkClient.getChildren(SyncSpoutZkConfig.ZK_ROOT_PATH)
+      val children = zkConfig.getZkClient.getChildren.forPath(SyncSpoutZkConfig.ZK_ROOT_PATH)
       println(s"$cmd 运行中的Spout列表")
       for(i<-0 until children.size()){
         println(s"$i,${children.get(i)}")
         val childrenPath = s"${SyncSpoutZkConfig.ZK_ROOT_PATH}/${children.get(i)}"
-        val server = zkConfig.getZkClient.getChildren(childrenPath)
+        val server = zkConfig.getZkClient.getChildren.forPath(childrenPath)
         if(cmd.toLowerCase=="list"){
           println(s"${children.get(i)} 分布详情")
           for(j<-0 until server.size()){
-              println(s"  $j,${server.get(j)},type = ${new String(zkConfig.getZkClient.getData[Array[Byte]](s"$childrenPath/${server.get(j)}"))}")
+            println(s"  $j,${server.get(j)},type = ${new String(zkConfig.getZkClient.getData.forPath(s"$childrenPath/${server.get(j)}"))}")
           }
         }else{
-          val children = zkConfig.getZkClient.getChildren(childrenPath)
+          val children = zkConfig.getZkClient.getChildren.forPath(childrenPath)
           if(children.isEmpty){
-            zkConfig.getZkClient.delete(childrenPath)
+            zkConfig.getZkClient.delete.forPath(childrenPath)
             println(s"$childrenPath 已删除")
           }else{
             for(i<-0 until children.size()){
-              zkConfig.getZkClient.delete(s"$childrenPath/${children.get(i)}")
+              zkConfig.getZkClient.delete.forPath(s"$childrenPath/${children.get(i)}")
               println(s"$childrenPath/${children.get(i)} 已删除")
             }
           }
