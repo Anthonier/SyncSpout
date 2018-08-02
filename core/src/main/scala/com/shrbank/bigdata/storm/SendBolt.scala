@@ -14,14 +14,7 @@ import org.slf4j.LoggerFactory
   * 最后处理的结果都需要通过该Bolt发送，发送给客户端的消息放在Message字段
   */
 object SendBolt {
-  /***
-    * SendBolt对应的ActorSystem名称
-    */
-  private val systemName = "SendBoltActorSystem"
-  /**
-    * SendBolt消息的字段名
-    */
-  val OutputFieldName = "SendBoltMessage-0f284c46-bf8c-4eed-9111-b87e8ae5196f"
+
   /**
     * ActorSystem变量
     */
@@ -34,7 +27,7 @@ object SendBolt {
     */
   private[SendBolt] def getActorSystemInstance:ActorSystem = {
     if( system == null ){
-      system = ActorSystem.create(SendBolt.systemName,SyncSpout.config)
+      system = ActorSystem.create(Utils.SendBoltSystemName,SyncSpout.config)
     }
     system
   }
@@ -62,7 +55,7 @@ class SendBolt extends BaseBasicBolt{
     * SendBolt退出时清理资源
     */
   override def cleanup(): Unit = {
-    system.shutdown()
+    system.terminate()
     zkConfig.unRegisterClientPort(this.sendBoltHost,this.sendBoltPort)
   }
 
@@ -97,15 +90,14 @@ class SendBolt extends BaseBasicBolt{
     */
   override def execute(tuple: Tuple, basicOutputCollector: BasicOutputCollector): Unit = {
     //val server = tuple.getValueByField(SyncSpout.TupleFieldName).asInstanceOf[String]
-    val client = tuple.getValueByField(SyncSpoutClient.TupleFieldName).asInstanceOf[ActorPath]
-    val msg = tuple.getValueByField(SendBolt.OutputFieldName)
-    val msgSendTime = tuple.getValueByField(SyncSpout.MsgSendTimeFieldName).asInstanceOf[String]
+    val client = tuple.getValueByField(Utils.ClientTupleFieldName).asInstanceOf[ActorPath]
+    val msg = tuple.getValueByField(Utils.SendBoltOutputFieldName)
+    val msgSendTime = tuple.getValueByField(Utils.MsgSendTimeFieldName).asInstanceOf[String]
 
     // 直接返回消息给client，以减少SyncSpout的压力
-    system.actorSelection(client) !  msg
+    system.actorSelection(client) !  ServerMsg(msg)
     basicOutputCollector.emit(SyncBoltValues(tuple,msg))
-    if( (System.currentTimeMillis - msgSendTime.toLong) > SyncSpout.MessageTimeThreshold )
-      log.warn(s"返回该消息$msg, 耗时 ${System.currentTimeMillis - msgSendTime.toLong} 毫秒")
+    log.debug(s"返回该消息$msg, 耗时 ${System.currentTimeMillis - msgSendTime.toLong} 毫秒")
   }
 
   /**
@@ -113,6 +105,6 @@ class SendBolt extends BaseBasicBolt{
     * @param outputFieldsDeclarer outputFieldsDeclarer
     */
   override def declareOutputFields(outputFieldsDeclarer: OutputFieldsDeclarer): Unit = {
-    outputFieldsDeclarer.declare(SyncBoltFields(SendBolt.OutputFieldName))
+    outputFieldsDeclarer.declare(SyncBoltFields(Utils.SendBoltOutputFieldName))
   }
 }

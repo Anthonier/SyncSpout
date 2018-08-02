@@ -15,17 +15,14 @@ trait IMessageSender{
   * 消息转发的actor
   * 该actor用来接收client发送的消息，并调用IMessageSender.send将该消息发送出去
   */
-private[storm] class MessageActor extends Actor with ActorLogging{
-  private var messageSender:IMessageSender = _
-  def this( msgSender:IMessageSender ) = {
-    this()
-    this.messageSender = msgSender
-  }
+private[storm] class MessageActor( messageSender:IMessageSender ) extends Actor with ActorLogging{
+
   override def receive: Receive =  {
     case ClientMsg(msg,msgSendTime) =>
-      log.debug(s"收到客户端消息$msg,耗时${System.currentTimeMillis()-msgSendTime}")
       messageSender.send(SpoutInputMsg(this.sender().path,msg,msgSendTime.toString))
-    case unKnownMsg =>
-      log.error(s"非法消息 $unKnownMsg")
+      log.debug(s"收到客户端消息$msg,耗时${System.currentTimeMillis()-msgSendTime}")
+    case unKnownTypeMsg =>
+      this.sender() ! ServerMsg(s"不支持的消息类型($unKnownTypeMsg)，请用ClientMsg进行封装")
+      log.error(s"非法消息 $unKnownTypeMsg")
   }
 }

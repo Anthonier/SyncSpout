@@ -9,9 +9,9 @@ import scala.collection.mutable.ArrayBuffer
   */
 object SyncBoltValues {
   def apply(tuple:Tuple,values: AnyRef * ) :Values = {
-    val server = tuple.getValueByField(SyncSpout.TupleFieldName)
-    val client = tuple.getValueByField(SyncSpoutClient.TupleFieldName)
-    val msgSendTime = tuple.getValueByField(SyncSpout.MsgSendTimeFieldName)
+    val server = tuple.getValueByField(Utils.SpoutTupleFieldName)
+    val client = tuple.getValueByField(Utils.ClientTupleFieldName)
+    val msgSendTime = tuple.getValueByField(Utils.MsgSendTimeFieldName)
     val syncBoltValues = new ArrayBuffer[AnyRef]()
     syncBoltValues.appendAll(values)
     syncBoltValues.append(server,client,msgSendTime)
@@ -22,7 +22,7 @@ object SyncBoltFields {
   def apply(fields: String* ) :Fields= {
     val syncSpoutFields = new ArrayBuffer[String]()
     syncSpoutFields.appendAll(fields)
-    syncSpoutFields.append(SyncSpout.TupleFieldName,SyncSpoutClient.TupleFieldName,SyncSpout.MsgSendTimeFieldName)
+    syncSpoutFields.append(Utils.SpoutTupleFieldName,Utils.ClientTupleFieldName,Utils.MsgSendTimeFieldName)
     new Fields( syncSpoutFields :_* )
   }
 }
